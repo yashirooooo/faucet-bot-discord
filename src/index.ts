@@ -34,7 +34,7 @@ const bot = () => {
       
       client.on('error', console.error);
       
-      client.on('messageCreate', async (msg: { authorId: number; content: string; reply: (arg0: string) => void; }) => {
+      client.on('messageCreate', async (msg: { authorId: string; content: string; reply: (arg0: string) => void; }) => {
           l.log(`msg: ${JSON.stringify(msg)}`)
           const address = msg.content;
           const authorId = msg.authorId;
