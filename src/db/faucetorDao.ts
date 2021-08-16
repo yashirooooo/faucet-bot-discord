@@ -2,7 +2,7 @@ import Faucetor from './models/faucetor';
 
 export const saveFaucetor = async (authorId: number) => {
   const faucetor = new Faucetor({
-    authorId: authorId,
+    authorId,
   });
   faucetor.save();
 };
