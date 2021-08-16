@@ -34,10 +34,9 @@ const bot = () => {
       
       client.on('error', console.error);
       
-      client.on('messageCreate', async (msg: { authorId: string; content: string; reply: (arg0: string) => void; }) => {
-          l.log(`msg: ${JSON.stringify(msg)}`)
+      client.on('messageCreate', async (msg: { author: any; content: string; reply: (arg0: string) => void; }) => {
           const address = msg.content;
-          const authorId = msg.authorId;
+          const authorId = msg.author.id;
           l.log(`authorId: ${authorId}`)
           if (isValidAddr(address)) {
             const isExist = await queryFaucetor(authorId);
