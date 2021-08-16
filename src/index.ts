@@ -1,11 +1,12 @@
 import { logger } from '@polkadot/util';
 import pRetry from 'p-retry';
-import { token, chainAddr, trasferAmount, seeds } from './consts';
+import { token, chainAddr, seeds } from './consts';
 const { Client, Intents } = require('discord.js');
 import { Keyring } from '@polkadot/keyring';
 import { sendCru } from './crustApi';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { typesBundleForPolkadot } from '@crustio/type-definitions';
+import { saveFaucetor, queryFaucetor } from './db/faucetorDao';
 
 const keyring = new Keyring();
 
@@ -33,11 +34,20 @@ const bot = () => {
       
       client.on('error', console.error);
       
-      client.on('messageCreate', async (msg: { content: string; reply: (arg0: string) => void; }) => {
+      client.on('messageCreate', async (msg: { authorId: number; content: string; reply: (arg0: string) => void; }) => {
           const address = msg.content;
+          const authorId = msg.authorId;
           if (isValidAddr(address)) {
-            const result = await sendCru(api, address, seeds);
-            msg.reply(result.details);
+            const isExist = await queryFaucetor(authorId);
+            if (isExist) {
+              msg.reply('You have already applied for the test token');
+            } else {
+              const result = await sendCru(api, address, seeds);
+              if (result.status) {
+                await saveFaucetor(authorId);
+              }
+              msg.reply(result.details);
+            }
           }
       });
   
