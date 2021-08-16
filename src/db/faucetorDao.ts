@@ -8,5 +8,5 @@ export const saveFaucetor = async (authorId: number) => {
 };
 
 export const queryFaucetor = async (authorId: number) => {
-    return Faucetor.findOne(authorId).exec();
+  return Faucetor.findOne({authorId}).exec();
 }
