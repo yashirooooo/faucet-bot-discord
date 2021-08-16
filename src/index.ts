@@ -1,6 +1,6 @@
 import { logger } from '@polkadot/util';
 import pRetry from 'p-retry';
-const { token } = require('./token.json');
+import { token } from './consts';
 const { Client, Intents } = require('discord.js');
 
 const l = logger('main');
