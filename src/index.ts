@@ -33,7 +33,7 @@ const bot = () => {
       
       client.on('error', console.error);
       
-      client.on('message', async (msg: { content: string; reply: (arg0: string) => void; }) => {
+      client.on('messageCreate', async (msg: { content: string; reply: (arg0: string) => void; }) => {
           const address = msg.content;
           if (isValidAddr(address)) {
             const result = await sendCru(api, address, seeds);
