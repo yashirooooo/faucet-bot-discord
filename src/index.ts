@@ -36,12 +36,12 @@ const bot = () => {
       client.on('error', console.error);
       
       client.on('messageCreate', async (msg: { channelId: any; content: any; author: { id: any; }; reply: (arg0: string) => void; }) => {
-        console.log('msg', JSON.stringify(msg))
         const channelId = msg.channelId;
         if (channel == channelId) {
           const address = msg.content;
           const authorId = msg.author.id;
           if (isValidAddr(address)) {
+            l.log(`msg: ${JSON.stringify(msg)}`)
             l.log(`authorId: ${authorId}`)
             const isExist = await queryFaucetor(authorId);
             if (isExist) {
@@ -49,7 +49,7 @@ const bot = () => {
                 const result = await sendCru(api, address, seeds);
                 if (result.status) {
                   await updateFaucetor(authorId, isExist.count+1);
-                  msg.reply(`💸 Transfer success, please check your account (${9-isExist.count}/10)`)
+                  msg.reply(`💸 Transfer success, please check your account (${isExist.count+1}/10)`)
                 } else {
                   msg.reply(`️⏰ Transfer failed, please try it later`);
                 }
@@ -61,7 +61,7 @@ const bot = () => {
               const result = await sendCru(api, address, seeds);
               if (result.status) {
                 await saveFaucetor(authorId);
-                msg.reply(`💸 Transfer success, please check your account (9/10)`)
+                msg.reply(`💸 Transfer success, please check your account (1/10)`)
               } else {
                 msg.reply(`️⏰ Transfer failed, please try it later`);
               }
