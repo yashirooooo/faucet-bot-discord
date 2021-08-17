@@ -6,7 +6,7 @@ import { Keyring } from '@polkadot/keyring';
 import { sendCru } from './crustApi';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { typesBundleForPolkadot } from '@crustio/type-definitions';
-import { saveFaucetor, queryFaucetor } from './db/faucetorDao';
+import { saveFaucetor, queryFaucetor, updateFaucetor } from './db/faucetorDao';
 
 const keyring = new Keyring();
 
@@ -37,17 +37,30 @@ const bot = () => {
       client.on('messageCreate', async (msg: { author: any; content: string; reply: (arg0: string) => void; }) => {
           const address = msg.content;
           const authorId = msg.author.id;
-          l.log(`authorId: ${authorId}`)
           if (isValidAddr(address)) {
+            l.log(`authorId: ${authorId}`)
             const isExist = await queryFaucetor(authorId);
             if (isExist) {
-              msg.reply('You have already applied for the test token');
+              if (10 > isExist.count) {
+                const result = await sendCru(api, address, seeds);
+                if (result.status) {
+                  await updateFaucetor(authorId, isExist.count+1);
+                  msg.reply(`� Transfer success, please check your account (${9-isExist.count}/10)`)
+                } else {
+                  msg.reply(`️ Transfer failed, please try it later`);
+                }
+              } else {
+                msg.reply(' 🚫 Reached the claim limit (10/10)');
+              }
+
             } else {
               const result = await sendCru(api, address, seeds);
               if (result.status) {
                 await saveFaucetor(authorId);
+                msg.reply(`� Transfer success, please check your account (9/10)`)
+              } else {
+                msg.reply(`️ Transfer failed, please try it later`);
               }
-              msg.reply(result.details);
             }
           }
       });
