@@ -7,6 +7,7 @@ import { sendCru } from './crustApi';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { typesBundleForPolkadot } from '@crustio/type-definitions';
 import { saveFaucetor, queryFaucetor, updateFaucetor } from './db/faucetorDao';
+import console from 'console';
 
 const keyring = new Keyring();
 
@@ -35,6 +36,7 @@ const bot = () => {
       client.on('error', console.error);
       
       client.on('messageCreate', async (msg: { author: any; content: string; reply: (arg0: string) => void; }) => {
+          console.log('msg', JSON.stringify(msg))
           const address = msg.content;
           const authorId = msg.author.id;
           if (isValidAddr(address)) {
