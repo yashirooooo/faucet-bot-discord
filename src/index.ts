@@ -45,21 +45,21 @@ const bot = () => {
                 const result = await sendCru(api, address, seeds);
                 if (result.status) {
                   await updateFaucetor(authorId, isExist.count+1);
-                  msg.reply(`� Transfer success, please check your account (${9-isExist.count}/10)`)
+                  msg.reply(`💸 Transfer success, please check your account (${9-isExist.count}/10)`)
                 } else {
-                  msg.reply(`️ Transfer failed, please try it later`);
+                  msg.reply(`️⏰ Transfer failed, please try it later`);
                 }
               } else {
-                msg.reply(' 🚫 Reached the claim limit (10/10)');
+                msg.reply('🚫 Reached the claim limit (10/10)');
               }
 
             } else {
               const result = await sendCru(api, address, seeds);
               if (result.status) {
                 await saveFaucetor(authorId);
-                msg.reply(`� Transfer success, please check your account (9/10)`)
+                msg.reply(`💸 Transfer success, please check your account (9/10)`)
               } else {
-                msg.reply(`️ Transfer failed, please try it later`);
+                msg.reply(`️⏰ Transfer failed, please try it later`);
               }
             }
           }
