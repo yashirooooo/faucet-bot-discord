@@ -36,37 +36,38 @@ const bot = () => {
       client.on('error', console.error);
       
       client.on('messageCreate', async (msg: { channelId: any; content: any; author: { id: any; }; reply: (arg0: string) => void; }) => {
-          const channelId = msg.channelId;
+        console.log('msg', JSON.stringify(msg))
+        const channelId = msg.channelId;
+        if (channel == channelId) {
           const address = msg.content;
           const authorId = msg.author.id;
-          if (channel == channelId) {
-            if (isValidAddr(address)) {
-              l.log(`authorId: ${authorId}`)
-              const isExist = await queryFaucetor(authorId);
-              if (isExist) {
-                if (10 > isExist.count) {
-                  const result = await sendCru(api, address, seeds);
-                  if (result.status) {
-                    await updateFaucetor(authorId, isExist.count+1);
-                    msg.reply(`💸 Transfer success, please check your account (${9-isExist.count}/10)`)
-                  } else {
-                    msg.reply(`️⏰ Transfer failed, please try it later`);
-                  }
-                } else {
-                  msg.reply('🚫 Reached the claim limit (10/10)');
-                }
-  
-              } else {
+          if (isValidAddr(address)) {
+            l.log(`authorId: ${authorId}`)
+            const isExist = await queryFaucetor(authorId);
+            if (isExist) {
+              if (10 > isExist.count) {
                 const result = await sendCru(api, address, seeds);
                 if (result.status) {
-                  await saveFaucetor(authorId);
-                  msg.reply(`💸 Transfer success, please check your account (9/10)`)
+                  await updateFaucetor(authorId, isExist.count+1);
+                  msg.reply(`💸 Transfer success, please check your account (${9-isExist.count}/10)`)
                 } else {
                   msg.reply(`️⏰ Transfer failed, please try it later`);
                 }
+              } else {
+                msg.reply('🚫 Reached the claim limit (10/10)');
+              }
+
+            } else {
+              const result = await sendCru(api, address, seeds);
+              if (result.status) {
+                await saveFaucetor(authorId);
+                msg.reply(`💸 Transfer success, please check your account (9/10)`)
+              } else {
+                msg.reply(`️⏰ Transfer failed, please try it later`);
               }
             }
           }
+        }
       });
   
       client.login(token);
