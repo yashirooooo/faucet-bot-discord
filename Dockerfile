@@ -1,7 +1,6 @@
 FROM node:current-alpine3.14
 
-# Create splorer-service directory
-WORKDIR /usr/src/splorer-service
+WORKDIR /usr/src/faucet-bot
 
 # Move source files to docker image
 COPY . .

@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@crustio/type-definitions": "1.1.0",
+    "@crustio/type-definitions": "1.2.0",
     "@polkadot/api": "4.2.2-4",
     "discord.js": "13.1.0",
     "p-retry": "^4.6.0",
